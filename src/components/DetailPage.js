@@ -31,7 +31,7 @@ function ProductDetailPage({ addToCart }) {
   }
 
   const isOutOfStock = product.inventory <= 0;
-  const productImages = product.images?.slice(0, 4) || [];
+  const productImages = product.image?.slice(0, 4) || [];
 
   return (
     <Container className="my-4">
