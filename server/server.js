@@ -69,25 +69,12 @@ app.get('/api/products/:id', async (req, res) => {
 app.post('/api/orders', async (req, res) => {
   const { customer, items, total } = req.body;
 
-  const FRONTEND_URL = 'https://online-store1-0.onrender.com';
-
-const itemsHtml = items
-  .map((item) => {
-    const imageUrl = item.image?.[0]
-      ? `${FRONTEND_URL}${item.image[0]}`
-      : '';
-
-    return `
-      <div style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #ccc;">
-        ${imageUrl ? `<img src="${imageUrl}" alt="${item.name}" style="width: 100px; height: auto; display: block; margin-bottom: 10px;" />` : ''}
-        <p style="margin: 0 0 6px 0;"><strong>${item.name}</strong></p>
-        <p style="margin: 0 0 4px 0;">Price: $${item.price}</p>
-        <p style="margin: 0 0 4px 0;">Quantity: ${item.quantity}</p>
-        <p style="margin: 0;">Line Total: $${item.price * item.quantity}</p>
-      </div>
-    `;
-  })
-  .join('');
+  const itemList = items
+    .map(
+      (item) =>
+        `${item.name} | Qty: ${item.quantity} | $${item.price} | Line: $${item.price * item.quantity}`
+    )
+    .join('\n');
 
   try {
     const transporter = nodemailer.createTransport({
@@ -102,18 +89,18 @@ const itemsHtml = items
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_USER,
       subject: 'New Order Request',
-      html: `
-  <h2>New Order Received</h2>
+      text: `
+New Order Received
 
-  <p><strong>Name:</strong> ${customer.name}</p>
-  <p><strong>Email:</strong> ${customer.email}</p>
-  <p><strong>Address:</strong><br>${customer.address}</p>
+Name: ${customer.name}
+Email: ${customer.email}
+Address: ${customer.address}
 
-  <h3>Items</h3>
-  ${itemsHtml}
+Items:
+${itemList}
 
-  <h3>Total: $${total}</h3>
-`,
+Total: $${total}
+      `,
     });
 
     res.json({ message: 'Order emailed successfully' });
