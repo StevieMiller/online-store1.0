@@ -65,16 +65,28 @@ function OrderForm({ cart, setCart }) {
                 <p className="text-center">Your cart is empty.</p>
               ) : (
                 <>
-                  {safeCart.map((item) => (
-                    <div key={item.id} className="mb-3 pb-3 border-bottom">
-                      <p className="mb-1"><strong>{item.name}</strong></p>
-                      <p className="mb-1">Price: ${item.price}</p>
-                      <p className="mb-1">Quantity: {item.quantity}</p>
-                      <p className="mb-0">
-                        Line Total: ${item.price * item.quantity}
-                      </p>
-                    </div>
-                  ))}
+                 {safeCart.map((item) => (
+  <div key={item._id} className="mb-3 pb-3 border-bottom d-flex gap-3 align-items-center">
+    
+    {item.image?.[0] && (
+      <img
+        src={item.image[0]}
+        alt={item.name}
+        style={{ width: '80px', height: 'auto' }}
+      />
+    )}
+
+    <div>
+      <p className="mb-1"><strong>{item.name}</strong></p>
+      <p className="mb-1">Price: ${item.price}</p>
+      <p className="mb-1">Quantity: {item.quantity}</p>
+      <p className="mb-0">
+        Line Total: ${item.price * item.quantity}
+      </p>
+    </div>
+
+  </div>
+))}
 
                   <h4 className="text-center mb-4">
                     Order Total: ${orderTotal}

@@ -28,6 +28,7 @@ function CheckoutPage({ cart }) {
           {/* Loop through each item in the cart */}
           {cart.map((item) => (
             <div key={item._id} className="mb-3">
+              
               {/* Display product name */}
               <div>{item.name}</div>
 

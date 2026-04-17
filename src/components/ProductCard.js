@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import './../styles/index.css';
 
-function ProductCard({ product, addToCart }) {
+function ProductCard({ product, addToCart, cart, decrementCartItem }) {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
+
+  const cartItem = cart?.find(item => item._id === product._id);
 
   return (
     <Col xs={12} sm={6} md={4} lg={3} className="mb-4">
@@ -44,12 +46,30 @@ function ProductCard({ product, addToCart }) {
             {product.condition}<br />
           </Card.Text>
 
-          <button
-            className="addtocart"
-            onClick={() => addToCart(product)}
-          >
-            Add to Cart
-          </button>
+          {cartItem ? (
+  <div className="cart-controls">
+    <button
+      className="decrement-btn"
+      onClick={() => decrementCartItem(product)}
+    >
+      🗑️
+    </button>
+
+    <button
+      className="addtocart"
+      onClick={() => addToCart(product)}
+    >
+      {cartItem.quantity} in cart
+    </button>
+  </div>
+) : (
+  <button
+    className="addtocart"
+    onClick={() => addToCart(product)}
+  >
+    Add to Cart
+  </button>
+)}
         </Card.Body>
       </Card>
     </Col>

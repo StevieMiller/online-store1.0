@@ -51,3 +51,16 @@
 .product-image.hover.fade-in {
   opacity: 1;
 }
+
+.cart-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.decrement-btn {
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}

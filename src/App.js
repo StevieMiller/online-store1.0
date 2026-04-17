@@ -47,8 +47,23 @@ function App() {
   // it starts as 'all', which means show every product
   const [selectedCondition, setSelectedCondition] = useState('all');
 
-  // cart stores all items the user has added to the cart
-  const [cart, setCart] = useState([]);
+// cart stores the items that the user has added to their shopping cart
+// It is initialized from localStorage if available, so the cart contents persist across page reloads
+  const [cart, setCart] = useState(() => {
+  try {
+    const savedCart = localStorage.getItem('cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  } catch {
+    return [];
+  }
+});
+
+// useEffect runs whenever the cart state changes
+// It saves the current cart to localStorage, so the cart contents persist if the user reloads the page
+useEffect(() => {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}, [cart]);
+
 
   // useEffect runs once when the App component first loads
   // because the dependency array [] is empty
@@ -132,6 +147,26 @@ const filteredProducts = products.filter((product) => {
     );
   };
 
+  // decrementCartItem decreases the quantity of a cart item by 1, but does not remove it if quantity reaches 0
+  // This allows the cart page to show items with 0 quantity, which can be useful for letting users see what they had in their cart and easily add it back
+  const decrementCartItem = (product) => {
+  setCart((prevCart) => {
+    const existingItem = prevCart.find((item) => item._id === product._id);
+
+    if (!existingItem) return prevCart;
+
+    if (existingItem.quantity === 1) {
+      return prevCart.filter((item) => item._id !== product._id);
+    }
+
+    return prevCart.map((item) =>
+      item._id === product._id
+        ? { ...item, quantity: item.quantity - 1 }
+        : item
+    );
+  });
+};
+
   return (
     // Router enables page navigation without reloading the browser
     <Router>
@@ -176,6 +211,8 @@ const filteredProducts = products.filter((product) => {
                     key={product._id}
                     product={product}
                     addToCart={addToCart}
+                    cart={cart}
+                    decrementCartItem={decrementCartItem}
                   />
                 ))}
               </Row>

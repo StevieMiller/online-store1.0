@@ -23,7 +23,7 @@ function CartPage({ cart, removeFromCart }) {
     // Container keeps content centered and responsive
     <Container>
       {/* Page title */}
-      <h2 className="text-center mb-4">Shopping Cart</h2>
+      <h2 className="text-center mb-4">Shopping Carttt</h2>
 
       {/* If cart is empty, show message */}
       {cart.length === 0 ? (
@@ -41,8 +41,7 @@ function CartPage({ cart, removeFromCart }) {
                 {/* Only render image if it exists */}
                 {item.image && (
                   <Image
-                    src={item.image}
-                    alt={item.name}
+src={item.image?.[0]}                    alt={item.name}
                     style={{ width: '100px' }}
                     rounded // adds rounded corners
                   />
