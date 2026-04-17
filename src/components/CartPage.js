@@ -23,7 +23,7 @@ function CartPage({ cart, removeFromCart }) {
     // Container keeps content centered and responsive
     <Container>
       {/* Page title */}
-      <h2 className="text-center mb-4">Shopping Carttt</h2>
+      <h2 className="text-center mb-4">Shopping Cart</h2>
 
       {/* If cart is empty, show message */}
       {cart.length === 0 ? (

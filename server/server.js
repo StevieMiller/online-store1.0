@@ -70,14 +70,38 @@ app.get('/api/products/:id', async (req, res) => {
 app.post('/api/orders', async (req, res) => {
   const { customer, items, total } = req.body;
 
-  const itemList = items
-    .map(
-      (item) =>
-        `${item.name} | SKU: ${item.sku} | Qty: ${item.quantity} | $${item.price} | Line: $${item.price * item.quantity}`
-    )
-    .join('\n');
-
   try {
+    // First, verify that all items exist and have enough inventory
+    for (const item of items) {
+      const product = await Product.findById(item._id);
+
+      if (!product) {
+        return res.status(404).json({
+          message: `Product not found for item: ${item.name}`,
+        });
+      }
+
+      if (product.inventory < item.quantity) {
+        return res.status(400).json({
+          message: `${product.name} is out of stock or does not have enough inventory`,
+        });
+      }
+    }
+
+    // If all items are valid, reduce inventory
+    for (const item of items) {
+      const product = await Product.findById(item._id);
+      product.inventory -= item.quantity;
+      await product.save();
+    }
+
+    const itemList = items
+      .map(
+        (item) =>
+          `${item.name} | SKU: ${item.sku} | Qty: ${item.quantity} | $${item.price} | Line: $${item.price * item.quantity}`
+      )
+      .join('\n');
+
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -104,10 +128,10 @@ Total: $${total}
       `,
     });
 
-    res.json({ message: 'Order emailed successfully' });
+    res.json({ message: 'Order emailed successfully and inventory updated' });
   } catch (error) {
-    console.error('Email error:', error);
-    res.status(500).json({ message: 'Failed to send email' });
+    console.error('Order error:', error);
+    res.status(500).json({ message: 'Failed to process order' });
   }
 });
 

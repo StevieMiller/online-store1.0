@@ -105,26 +105,27 @@ const filteredProducts = products.filter((product) => {
 });
 
   // addToCart handles adding a product to the cart
-  const addToCart = (product) => {
-    setCart((prevCart) => {
-      // Check whether this product is already in the cart
-      const existingItem = prevCart.find((item) => item._id === product._id);
+const addToCart = (product) => {
+  setCart((prev) => {
+    const existing = prev.find((item) => item._id === product._id);
 
-      // If the product already exists in the cart,
-      // return a new cart where that item's quantity increases by 1
-      if (existingItem) {
-        return prevCart.map((item) =>
-          item._id === product._id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      } else {
-        // If the product is not already in the cart,
-        // add it as a new item with quantity set to 1
-        return [...prevCart, { ...product, quantity: 1 }];
+    if (product.inventory <= 0) return prev;
+
+    if (existing) {
+      if (existing.quantity >= product.inventory) {
+        return prev;
       }
-    });
-  };
+
+      return prev.map((item) =>
+        item._id === product._id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    }
+
+    return [...prev, { ...product, quantity: 1 }];
+  });
+};
 
   // totalCartItems calculates the total number of items in the cart
   // This is useful for showing a cart badge in the navigation bar

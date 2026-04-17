@@ -9,6 +9,8 @@ function ProductCard({ product, addToCart, cart, decrementCartItem }) {
 
   const cartItem = cart?.find(item => item._id === product._id);
 
+  const isOutOfStock = product.inventory <= 0;
+
   return (
     <Col xs={12} sm={6} md={4} lg={3} className="mb-4">
       <Card className="h-100">
@@ -45,6 +47,7 @@ function ProductCard({ product, addToCart, cart, decrementCartItem }) {
             {product.brand}<br />
             ${product.price}<br />
             {product.condition}<br />
+            {isOutOfStock ? 'Out of Stock' : `In Stock: ${product.inventory}`}
           </Card.Text>
 
           {cartItem ? (

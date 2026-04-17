@@ -30,7 +30,8 @@ function ProductDetailPage({ addToCart }) {
     );
   }
 
-  const productImages = product.image?.slice(0, 4) || [];
+  const isOutOfStock = product.inventory <= 0;
+  const productImages = product.images?.slice(0, 4) || [];
 
   return (
     <Container className="my-4">
@@ -41,15 +42,18 @@ function ProductDetailPage({ addToCart }) {
               <Row>
                 {productImages.map((img, index) => (
                   <Col xs={6} className="mb-3" key={index}>
-                    <Card.Img
-                      src={img}
-                      alt={`${product.name} view ${index + 1}`}
-                      style={{
-                        width: '100%',
-                        height: '450px',
-                        objectFit: 'cover'
-                      }}
-                    />
+                    <a href={img} target="_blank" rel="noopener noreferrer">
+                      <Card.Img
+                        src={img}
+                        alt={`${product.name} view ${index + 1}`}
+                        style={{
+                          width: '100%',
+                          height: '450px',
+                          objectFit: 'cover',
+                          cursor: 'pointer'
+                        }}
+                      />
+                    </a>
                   </Col>
                 ))}
               </Row>
@@ -92,12 +96,16 @@ function ProductDetailPage({ addToCart }) {
                 </Card.Text>
               )}
 
-              <button
-                className="addtocart"
-                onClick={() => addToCart(product)}
-              >
-                Add to Cart
-              </button>
+              {isOutOfStock ? (
+                <p style={{ color: 'red', fontWeight: 'bold' }}>Out of Stock</p>
+              ) : (
+                <button
+                  className="addtocart"
+                  onClick={() => addToCart(product)}
+                >
+                  Add to Cart
+                </button>
+              )}
             </Card.Body>
           </Col>
         </Row>
