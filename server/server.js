@@ -35,7 +35,9 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('Error connecting to MongoDB:', err));
 
-
+app.get('/', (req, res) => {
+  res.send('API is running');
+});
 
 // GET all products from MongoDB
 app.get('/api/products', async (req, res) => {
