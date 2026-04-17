@@ -54,7 +54,7 @@ function App() {
   // because the dependency array [] is empty
   useEffect(() => {
     // Fetch product data from the backend API
-    fetch('http://localhost:5000/api/products')
+    fetch('https://online-store1-0.onrender.com/api/products')
       .then((res) => res.json()) // convert response into JSON
       .then((data) => setProducts(data)) // save fetched products into state
       .catch((err) => console.error('Error fetching products:', err)); // log any fetch errors

@@ -7,7 +7,7 @@ function ProductDetailPage({ addToCart }) {
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/products/${id}`)
+    fetch(`https://online-store1-0.onrender.com/api/products/${id}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error('Product not found');
