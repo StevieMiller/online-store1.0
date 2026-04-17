@@ -117,6 +117,8 @@ function NavigationBar({ setSelectedCategory, totalCartItems, selectedColor, set
   <option value="brown">Brown</option>
   <option value="gold">Gold</option>
   <option value="multi">Multi</option>
+  <option value="green">Green</option>
+  <option value="orange">Orange</option>
   <option value="pink">Pink</option>
   <option value="purple">Purple</option>
   <option value="red">Red</option>

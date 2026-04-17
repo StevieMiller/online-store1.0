@@ -42,6 +42,7 @@ function ProductCard({ product, addToCart, cart, decrementCartItem }) {
           </Card.Title>
 
           <Card.Text>
+            {product.brand}<br />
             ${product.price}<br />
             {product.condition}<br />
           </Card.Text>
