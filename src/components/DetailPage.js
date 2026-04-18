@@ -42,7 +42,7 @@ function ProductDetailPage({ addToCart }) {
               <Row>
                 {productImages.map((img, index) => (
                   <Col xs={6} className="mb-3" key={index}>
-                    <a href={img} target="_blank" rel="noopener noreferrer">
+                    <a href={img} rel="noopener noreferrer">
                       <Card.Img
                         src={img}
                         alt={`${product.name} view ${index + 1}`}
