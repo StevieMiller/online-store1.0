@@ -13,6 +13,8 @@ import CartPage from './components/CartPage';
 import CheckoutPage from './components/CheckoutPage';
 import OrderForm from './components/OrderForm';
 import ProductDetailPage from './components/DetailPage';
+import Footer from './components/Footer';
+import InventoryForm from './components/InventoryForm';
 
 // Import layout components from React Bootstrap
 import { Container, Row } from 'react-bootstrap';
@@ -47,23 +49,22 @@ function App() {
   // it starts as 'all', which means show every product
   const [selectedCondition, setSelectedCondition] = useState('all');
 
-// cart stores the items that the user has added to their shopping cart
-// It is initialized from localStorage if available, so the cart contents persist across page reloads
+  // cart stores the items that the user has added to their shopping cart
+  // It is initialized from localStorage if available, so the cart contents persist across page reloads
   const [cart, setCart] = useState(() => {
-  try {
-    const savedCart = localStorage.getItem('cart');
-    return savedCart ? JSON.parse(savedCart) : [];
-  } catch {
-    return [];
-  }
-});
+    try {
+      const savedCart = localStorage.getItem('cart');
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch {
+      return [];
+    }
+  });
 
-// useEffect runs whenever the cart state changes
-// It saves the current cart to localStorage, so the cart contents persist if the user reloads the page
-useEffect(() => {
-  localStorage.setItem('cart', JSON.stringify(cart));
-}, [cart]);
-
+  // useEffect runs whenever the cart state changes
+  // It saves the current cart to localStorage, so the cart contents persist if the user reloads the page
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
 
   // useEffect runs once when the App component first loads
   // because the dependency array [] is empty
@@ -77,55 +78,55 @@ useEffect(() => {
 
   // filteredProducts applies the selected category and color filters to the products list
   // It returns a new array of products that match the selected category and color
-const filteredProducts = products.filter((product) => {
-  const categoryMatch =
-    selectedCategory === 'all' ||
-    product.category === selectedCategory;
+  const filteredProducts = products.filter((product) => {
+    const categoryMatch =
+      selectedCategory === 'all' ||
+      product.category === selectedCategory;
 
-  const colorMatch =
-  selectedColor === 'all' ||
-  !product.color ||
-  product.color.toLowerCase().trim() === selectedColor.toLowerCase().trim();
+    const colorMatch =
+      selectedColor === 'all' ||
+      !product.color ||
+      product.color.toLowerCase().trim() === selectedColor.toLowerCase().trim();
 
-  const priceMatch =
-    selectedMaxPrice === 'all' ||
-    product.price <= parseFloat(selectedMaxPrice);
+    const priceMatch =
+      selectedMaxPrice === 'all' ||
+      product.price <= parseFloat(selectedMaxPrice);
 
-  const sizeMatch =
-  selectedSize === 'all' ||
-  (product.size &&
-    product.size.toLowerCase().trim() === selectedSize.toLowerCase().trim());
+    const sizeMatch =
+      selectedSize === 'all' ||
+      (product.size &&
+        product.size.toLowerCase().trim() === selectedSize.toLowerCase().trim());
 
-  const conditionMatch =
-  selectedCondition === 'all' ||
-  !product.condition ||
-  product.condition.toLowerCase().trim() === selectedCondition.toLowerCase().trim();
+    const conditionMatch =
+      selectedCondition === 'all' ||
+      !product.condition ||
+      product.condition.toLowerCase().trim() === selectedCondition.toLowerCase().trim();
 
-  return categoryMatch && colorMatch && priceMatch && sizeMatch && conditionMatch;
-});
+    return categoryMatch && colorMatch && priceMatch && sizeMatch && conditionMatch;
+  });
 
   // addToCart handles adding a product to the cart
-const addToCart = (product) => {
-  setCart((prev) => {
-    const existing = prev.find((item) => item._id === product._id);
+  const addToCart = (product) => {
+    setCart((prev) => {
+      const existing = prev.find((item) => item._id === product._id);
 
-    if (product.inventory <= 0) return prev;
+      if (product.inventory <= 0) return prev;
 
-    if (existing) {
-      if (existing.quantity >= product.inventory) {
-        return prev;
+      if (existing) {
+        if (existing.quantity >= product.inventory) {
+          return prev;
+        }
+
+        return prev.map((item) =>
+          item._id === product._id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
       }
 
-      return prev.map((item) =>
-        item._id === product._id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      );
-    }
-
-    return [...prev, { ...product, quantity: 1 }];
-  });
-};
+      return [...prev, { ...product, quantity: 1 }];
+    });
+  };
 
   // totalCartItems calculates the total number of items in the cart
   // This is useful for showing a cart badge in the navigation bar
@@ -148,30 +149,31 @@ const addToCart = (product) => {
     );
   };
 
-  // decrementCartItem decreases the quantity of a cart item by 1, but does not remove it if quantity reaches 0
-  // This allows the cart page to show items with 0 quantity, which can be useful for letting users see what they had in their cart and easily add it back
+  // decrementCartItem decreases the quantity of a cart item by 1
+  // If quantity reaches 1, removing one more deletes the item from cart
   const decrementCartItem = (product) => {
-  setCart((prevCart) => {
-    const existingItem = prevCart.find((item) => item._id === product._id);
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item._id === product._id);
 
-    if (!existingItem) return prevCart;
+      if (!existingItem) return prevCart;
 
-    if (existingItem.quantity === 1) {
-      return prevCart.filter((item) => item._id !== product._id);
-    }
+      if (existingItem.quantity === 1) {
+        return prevCart.filter((item) => item._id !== product._id);
+      }
 
-    return prevCart.map((item) =>
-      item._id === product._id
-        ? { ...item, quantity: item.quantity - 1 }
-        : item
-    );
-  });
-};
+      return prevCart.map((item) =>
+        item._id === product._id
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      );
+    });
+  };
 
   return (
     // Router enables page navigation without reloading the browser
     <Router>
-              {/* Navigation bar appears on every page */}
+      <div className="d-flex flex-column min-vh-100">
+        {/* Navigation bar appears on every page */}
         <NavigationBar
           // Pass the category setter so the nav can change the filter
           setSelectedCategory={setSelectedCategory}
@@ -193,76 +195,84 @@ const addToCart = (product) => {
           selectedCondition={selectedCondition}
           // Pass the condition setter so the nav can change the condition filter
           setSelectedCondition={setSelectedCondition}
-
         />
-      {/* Container gives the app Bootstrap layout spacing */}
-      <Container className="App">
 
+        {/* Main content area grows to fill available space */}
+        <Container className="App flex-grow-1">
+          {/* Routes contains all page definitions */}
+          <Routes>
+            {/* Home page route */}
+            <Route
+              path="/"
+              element={
+                <Row>
+                  {/* Loop through filteredProducts and render one ProductCard for each */}
+                  {filteredProducts.map((product) => (
+                    <ProductCard
+                      key={product._id}
+                      product={product}
+                      addToCart={addToCart}
+                      cart={cart}
+                      decrementCartItem={decrementCartItem}
+                    />
+                  ))}
+                </Row>
+              }
+            />
 
-        {/* Routes contains all page definitions */}
-        <Routes>
-          {/* Home page route */}
-          <Route
-            path="/"
-            element={
-              <Row>
-                {/* Loop through filteredProducts and render one ProductCard for each */}
-                {filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product._id}
-                    product={product}
-                    addToCart={addToCart}
-                    cart={cart}
-                    decrementCartItem={decrementCartItem}
-                  />
-                ))}
-              </Row>
-            }
-          />
+            {/* Cart page route */}
+            <Route
+              path="/cart"
+              element={
+                <CartPage
+                  cart={cart}
+                  removeFromCart={removeFromCart}
+                />
+              }
+            />
 
-          {/* Cart page route */}
-          <Route
-            path="/cart"
-            element={
-              <CartPage
-                cart={cart}
-                removeFromCart={removeFromCart}
-              />
-            }
-          />
+            {/* Checkout page route */}
+            <Route
+              path="/checkout"
+              element={
+                <CheckoutPage
+                  cart={cart}
+                />
+              }
+            />
 
-          {/* Checkout page route */}
-          <Route
-            path="/checkout"
-            element={
-              <CheckoutPage
-                cart={cart}
-              />
-            }
-          />
+            {/* Order form page route */}
+            <Route
+              path="/order"
+              element={
+                <OrderForm
+                  cart={cart}
+                  setCart={setCart}
+                />
+              }
+            />
 
-          {/* Order form page route */}
-          <Route
-            path="/order"
-            element={
-              <OrderForm
-                cart={cart}
-                setCart={setCart}
-              />
-            }
-          />
+            {/* Product detail page route */}
+            <Route
+              path="/product/:id"
+              element={
+                <ProductDetailPage
+                  addToCart={addToCart}
+                />
+              }
+            />
 
-          {/* Product detail page route */}
-          <Route
-            path="/product/:id"
-            element={
-              <ProductDetailPage
-                addToCart={addToCart}
-              />
-            }
-          />
-        </Routes>
-      </Container>
+            {/* Admin page route */}
+            <Route
+              path="/admin"
+              element={<InventoryForm />}
+            />
+          </Routes>
+        </Container>
+
+        {/* Footer appears on every page and stays at bottom on short pages */}
+        <Footer />
+      </div>
     </Router>
   );
 }

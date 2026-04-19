@@ -66,6 +66,44 @@ app.get('/api/products/:id', async (req, res) => {
   }
 });
 
+// POST a new product to MongoDB
+app.post('/api/products', async (req, res) => {
+  try {
+    const {
+      name,
+      price,
+      category,
+      condition,
+      sizes,
+      colors,
+      description,
+      images,
+      inventory,
+      sku,
+    } = req.body;
+
+    const newProduct = new Product({
+      name,
+      price,
+      category,
+      condition,
+      sizes: Array.isArray(sizes) ? sizes : [],
+      colors: Array.isArray(colors) ? colors : [],
+      description: description || '',
+      images: Array.isArray(images) ? images : [],
+      inventory: inventory ?? 1,
+      sku: sku || '',
+    });
+
+    await newProduct.save();
+
+    res.status(201).json(newProduct);
+  } catch (err) {
+    console.error('Error creating product:', err);
+    res.status(500).json({ error: 'Failed to create product' });
+  }
+});
+
 // POST order request and send plain text email
 app.post('/api/orders', async (req, res) => {
   const { customer, items, total } = req.body;

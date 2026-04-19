@@ -5,11 +5,12 @@ const productSchema = new mongoose.Schema({
   price: Number,
   category: String,
   condition: String,
-  size: String,
-  color: String,
+  sizes: [String],   // changed
+  colors: [String],  // changed
   description: String,
   images: [String],
-  inventory: { type: Number, default: 1 }
+  inventory: { type: Number, default: 1 },
+  sku: String
 });
 
 module.exports = mongoose.model('Product', productSchema);
