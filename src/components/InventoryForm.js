@@ -6,8 +6,8 @@ function AdminInventoryForm() {
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
   const [condition, setCondition] = useState('');
-  const [sizes, setSizes] = useState('');
-  const [colors, setColors] = useState('');
+  const [size, setSize] = useState('');
+  const [color, setColor] = useState('');
   const [brand, setBrand] = useState('');
   const [description, setDescription] = useState('');
   const [imagePaths, setImagePaths] = useState('');
@@ -27,15 +27,9 @@ function AdminInventoryForm() {
       price: Number(price),
       category,
       condition,
-      sizes: sizes
-        .split(',')
-        .map((item) => item.trim())
-        .filter((item) => item !== ''),
-      colors: colors
-        .split(',')
-        .map((item) => item.trim())
-        .filter((item) => item !== ''),
-        brand,
+      size,
+      color,
+      brand,
       description,
       images: imagePaths
         .split(',')
@@ -67,8 +61,8 @@ function AdminInventoryForm() {
       setPrice('');
       setCategory('');
       setCondition('');
-      setSizes('');
-      setColors('');
+      setSize('');
+      setColor('');
         setBrand('');
       setDescription('');
       setImagePaths('');
@@ -133,22 +127,22 @@ function AdminInventoryForm() {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Sizes</Form.Label>
+          <Form.Label>Size</Form.Label>
           <Form.Control
             type="text"
             placeholder="Small, Medium, Large or 2, 4, 6"
-            value={sizes}
-            onChange={(e) => setSizes(e.target.value)}
+            value={size}
+            onChange={(e) => setSize(e.target.value)}
           />
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Colors</Form.Label>
+          <Form.Label>Color</Form.Label>
           <Form.Control
             type="text"
             placeholder="black, silver, cream"
-            value={colors}
-            onChange={(e) => setColors(e.target.value)}
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
           />
         </Form.Group>
 
