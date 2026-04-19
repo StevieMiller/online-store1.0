@@ -5,8 +5,8 @@ const productSchema = new mongoose.Schema({
   price: Number,
   category: String,
   condition: String,
-  sizes: [String],   // changed
-  colors: [String],  // changed
+  size: String,   // changed
+  color: String,  // changed
   description: String,
   images: [String],
   inventory: { type: Number, default: 1 },
