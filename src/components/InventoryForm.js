@@ -8,6 +8,7 @@ function AdminInventoryForm() {
   const [condition, setCondition] = useState('');
   const [sizes, setSizes] = useState('');
   const [colors, setColors] = useState('');
+  const [brand, setBrand] = useState('');
   const [description, setDescription] = useState('');
   const [imagePaths, setImagePaths] = useState('');
   const [inventory, setInventory] = useState('1');
@@ -34,6 +35,7 @@ function AdminInventoryForm() {
         .split(',')
         .map((item) => item.trim())
         .filter((item) => item !== ''),
+        brand,
       description,
       images: imagePaths
         .split(',')
@@ -67,6 +69,7 @@ function AdminInventoryForm() {
       setCondition('');
       setSizes('');
       setColors('');
+        setBrand('');
       setDescription('');
       setImagePaths('');
       setInventory('1');
@@ -133,7 +136,7 @@ function AdminInventoryForm() {
           <Form.Label>Sizes</Form.Label>
           <Form.Control
             type="text"
-            placeholder="S, M, L"
+            placeholder="Small, Medium, Large or 2, 4, 6"
             value={sizes}
             onChange={(e) => setSizes(e.target.value)}
           />
@@ -147,6 +150,16 @@ function AdminInventoryForm() {
             value={colors}
             onChange={(e) => setColors(e.target.value)}
           />
+        </Form.Group>
+
+            <Form.Group className="mb-3">
+            <Form.Label>Brand</Form.Label>
+            <Form.Control
+                type="text"
+                placeholder="Brand name"
+                value={brand}
+                onChange={(e) => setBrand(e.target.value)}
+            />
         </Form.Group>
 
         <Form.Group className="mb-3">
