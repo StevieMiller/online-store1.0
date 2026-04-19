@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { NavbarBrand } = require('react-bootstrap');
 
 const productSchema = new mongoose.Schema({
   name: String,
@@ -7,6 +8,7 @@ const productSchema = new mongoose.Schema({
   condition: String,
   size: String,   // changed
   color: String,  // changed
+  brand: String,   // new field
   description: String,
   images: [String],
   inventory: { type: Number, default: 1 },
