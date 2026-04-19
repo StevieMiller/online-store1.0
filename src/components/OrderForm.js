@@ -11,6 +11,9 @@ function OrderForm({ cart, setCart }) {
   // Store customer name input
   const [name, setName] = useState('');
 
+  // Store customer phone number input
+  const [phone, setPhone] = useState('');
+
   // Store customer email input
   const [email, setEmail] = useState('');
 
@@ -25,12 +28,19 @@ function OrderForm({ cart, setCart }) {
   // so methods like .reduce() and .map() do not crash
   const safeCart = cart || [];
 
-  // Calculate full order total by adding up:
+  // Calculate full order subtotal by adding up:
   // item price × item quantity for every item in the cart
   const orderTotal = safeCart.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
+
+  // Flat-rate shipping:
+  // Free shipping for orders over $50, otherwise $8
+  const shippingCost = safeCart.length > 0 ? (orderTotal > 50 ? 0 : 8) : 0;
+
+  // Final amount customer owes
+  const finalTotal = orderTotal + shippingCost;
 
   // Runs when the user submits the order form
   const handleSubmit = async (e) => {
@@ -41,11 +51,14 @@ function OrderForm({ cart, setCart }) {
     const orderData = {
       customer: {
         name,
+        phone,
         email,
         address,
       },
       items: safeCart,
-      total: orderTotal,
+      subtotal: orderTotal,
+      shipping: shippingCost,
+      total: finalTotal,
     };
 
     try {
@@ -71,6 +84,7 @@ function OrderForm({ cart, setCart }) {
 
       // Clear all form fields after successful submission
       setName('');
+      setPhone('');
       setEmail('');
       setAddress('');
 
@@ -84,6 +98,23 @@ function OrderForm({ cart, setCart }) {
       alert('There was a problem submitting your order.');
     }
   };
+
+  const formatPhoneNumber = (value) => {
+  const digits = value.replace(/\D/g, '').slice(0, 10); // only numbers, max 10
+
+  const part1 = digits.slice(0, 3);
+  const part2 = digits.slice(3, 6);
+  const part3 = digits.slice(6, 10);
+
+  if (digits.length < 4) return part1;
+  if (digits.length < 7) return `(${part1}) ${part2}`;
+  return `(${part1}) ${part2}-${part3}`;
+};
+
+const handlePhoneChange = (e) => {
+  const formatted = formatPhoneNumber(e.target.value);
+  setPhone(formatted);
+};
 
   return (
     // Outer page container with top margin spacing
@@ -123,20 +154,20 @@ function OrderForm({ cart, setCart }) {
                       {/* Product text details */}
                       <div>
                         <p className="mb-1"><strong>{item.name}</strong></p>
-                          <p className="mb-1">Item Code: {item.sku}</p>
-                        <p className="mb-1">Price: ${item.price}</p>
+                        <p className="mb-1">Item Code: {item.sku}</p>
+                        <p className="mb-1">Price: ${item.price.toFixed(2)}</p>
                         <p className="mb-1">Quantity: {item.quantity}</p>
                         <p className="mb-0">
-                          Line Total: ${item.price * item.quantity}
+                          Line Total: ${(item.price * item.quantity).toFixed(2)}
                         </p>
                       </div>
                     </div>
                   ))}
 
-                  {/* Display total cost for the full order */}
-                  <h4 className="text-center mb-4">
-                    Order Total: ${orderTotal}
-                  </h4>
+                  {/* Display pricing summary */}
+                  <p>Subtotal: ${orderTotal.toFixed(2)}</p>
+                  <p>Shipping: ${shippingCost.toFixed(2)}</p>
+                  <h4>Total: ${finalTotal.toFixed(2)}</h4>
 
                   {/* Customer information form */}
                   <Form onSubmit={handleSubmit}>
@@ -150,6 +181,18 @@ function OrderForm({ cart, setCart }) {
                         required
                       />
                     </Form.Group>
+
+                    {/* Phone number field */}
+                    <Form.Group className="mb-3" controlId="orderPhone">
+  <Form.Label>Phone Number</Form.Label>
+  <Form.Control
+    type="text"
+    value={phone}
+    onChange={handlePhoneChange}
+    placeholder="(xxx) xxx-xxxx"
+    required
+  />
+</Form.Group>
 
                     {/* Email field */}
                     <Form.Group className="mb-3" controlId="orderEmail">
@@ -174,6 +217,10 @@ function OrderForm({ cart, setCart }) {
                       />
                     </Form.Group>
 
+                    <div className="mb-3">
+                      <p>Your information will only be used to contact you about your order, if needed.</p>
+                    </div>
+
                     {/* Full-width submit button */}
                     <div className="d-grid">
                       <Button type="submit" variant="primary">
@@ -193,7 +240,7 @@ function OrderForm({ cart, setCart }) {
             </Modal.Header>
 
             <Modal.Body>
-              Your order was received. I will send a Venmo payment link shortly.
+              Your order was received. A payment link will be sent to your email.
             </Modal.Body>
 
             <Modal.Footer>
