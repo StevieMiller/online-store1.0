@@ -67,6 +67,10 @@ function ProductDetailPage({ addToCart }) {
               <Card.Title as="h2">{product.name}</Card.Title>
 
               <Card.Text>
+                <strong>Brand:</strong> {product.brand}
+              </Card.Text>
+
+              <Card.Text>
                 <strong>Price:</strong> ${product.price}
               </Card.Text>
 
