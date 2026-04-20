@@ -122,6 +122,7 @@ function NavigationBar({ setSelectedCategory, totalCartItems, selectedColor, set
   <option value="pink">Pink</option>
   <option value="purple">Purple</option>
   <option value="red">Red</option>
+  <option value="white">White</option>
 </Form.Select>
 
         <Form.Select className='me-2'
