@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 // Import CSS styling for this App component
 import './styles/index.css';
 
+import loadingGif from './images/loading_icon.gif';
+
 // Import custom components used in this app
 import NavigationBar from './components/NaviBar';
 import ProductCard from './components/ProductCard';
@@ -17,7 +19,7 @@ import Footer from './components/Footer';
 import InventoryForm from './components/InventoryForm';
 
 // Import layout components from React Bootstrap
-import { Container, Row } from 'react-bootstrap';
+import { Container, Row, Modal } from 'react-bootstrap';
 
 // Import routing tools from React Router
 // Router wraps the whole app so routes can work
@@ -26,8 +28,13 @@ import { Container, Row } from 'react-bootstrap';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
+  
+
   // products stores all product data fetched from the backend
   const [products, setProducts] = useState([]);
+
+  // loading tracks whether the app is still fetching product data
+  const [loading, setLoading] = useState(true);
 
   // selectedCategory stores the currently selected product category
   // it starts as 'all', which means show every product
@@ -59,6 +66,19 @@ function App() {
       return [];
     }
   });
+
+  useEffect(() => {
+  fetch('https://online-store1-0.onrender.com/api/products')
+    .then(res => res.json())
+    .then(data => {
+      setProducts(data);
+      setLoading(false); // ← THIS is what closes the modal
+    })
+    .catch(err => {
+      console.error(err);
+      setLoading(false); // still close so user isn’t stuck forever
+    });
+}, []);
 
   // useEffect runs whenever the cart state changes
   // It saves the current cart to localStorage, so the cart contents persist if the user reloads the page
@@ -268,6 +288,13 @@ function App() {
               element={<InventoryForm />}
             />
           </Routes>
+          <Modal show={loading} centered backdrop="static" keyboard={false}>
+  <Modal.Body style={{ textAlign: 'center' }}>
+    <p>Waking up the server… this can take up to a minute.</p>
+    <p>Loading inventory...</p>
+    <p><img src={loadingGif} alt="Loading..." /></p>
+  </Modal.Body>
+</Modal>
         </Container>
 
         {/* Footer appears on every page and stays at bottom on short pages */}
