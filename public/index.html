@@ -24,6 +24,15 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+      <script>
+  (function () {
+    const redirect = sessionStorage.redirect;
+    if (redirect) {
+      sessionStorage.removeItem('redirect');
+      history.replaceState(null, null, redirect);
+    }
+  })();
+</script>
     <title>Galactic Outpost</title>
   </head>
   <body>
