@@ -45,6 +45,7 @@ function ProductCard({ product, addToCart, cart, decrementCartItem }) {
 
           <Card.Text>
             {product.brand}<br />
+            {product.size && `${product.size}`}<br />
             ${product.price}<br />
             {product.condition}<br />
             {isOutOfStock ? 'Out of Stock' : `In Stock: ${product.inventory}`}

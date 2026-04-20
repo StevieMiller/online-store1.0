@@ -119,7 +119,7 @@ function AdminInventoryForm() {
           <Form.Label>Condition</Form.Label>
           <Form.Control
             type="text"
-            placeholder="new or used"
+            placeholder="New or Used"
             value={condition}
             onChange={(e) => setCondition(e.target.value)}
             required
