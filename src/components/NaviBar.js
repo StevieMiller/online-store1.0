@@ -131,11 +131,12 @@ function NavigationBar({ setSelectedCategory, totalCartItems, selectedColor, set
   style={{ maxWidth: '200px' }}
 >
   <option value="all">All Prices</option>
+  <option value="5">Under $5</option>
+  <option value="10">Under $10</option>
+  <option value="20">Under $20</option>
   <option value="30">Under $30</option>
+  <option value="40">Under $40</option>
   <option value="50">Under $50</option>
-  <option value="100">Under $100</option>
-  <option value="200">Under $200</option>
-  <option value="500">Under $500</option>
 </Form.Select>
 
         {/* Right-side navigation (cart link) */}
