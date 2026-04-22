@@ -31,7 +31,7 @@ function AdminInventoryForm() {
       color,
       brand,
       description,
-      images: imagePaths
+      image: imagePaths
         .split(',')
         .map((item) => item.trim())
         .filter((item) => item !== ''),
