@@ -78,7 +78,7 @@ app.post('/api/products', async (req, res) => {
       color,
       brand,
       description,
-      images,
+      image,
       inventory,
       sku,
     } = req.body;
@@ -92,7 +92,7 @@ app.post('/api/products', async (req, res) => {
       color: color || '',
       brand: brand || '',
       description: description || '',
-      images: Array.isArray(images) ? images : [],
+      image: Array.isArray(image) ? image : [],
       inventory: inventory ?? 1,
       sku: sku || '',
     });
