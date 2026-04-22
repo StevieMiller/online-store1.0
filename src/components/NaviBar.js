@@ -29,6 +29,7 @@ function NavigationBar({ setSelectedCategory, totalCartItems, selectedColor, set
     { name: 'All Products', value: 'all' },
     { name: 'Tops', value: 'tops' },
     { name: 'Bottoms', value: 'bottoms' },
+    { name: 'Dresses', value: 'dresses' },
     { name: 'Outerwear', value: 'outerwear' },
     { name: 'Shoes', value: 'shoes' },
     { name: 'Accessories', value: 'accessories' },
