@@ -10,7 +10,7 @@ const productSchema = new mongoose.Schema({
   color: String,  // changed
   brand: String,   // new field
   description: String,
-  images: [String],
+  image: [String],
   inventory: { type: Number, default: 1 },
   sku: String,
 });
