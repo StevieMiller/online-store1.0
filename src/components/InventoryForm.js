@@ -22,6 +22,11 @@ function AdminInventoryForm() {
     setMessage('');
     setError('');
 
+    const parsedImages = imagePaths
+      .split(',')
+      .map((item) => item.trim())
+      .filter((item) => item !== '');
+
     const productData = {
       name,
       price: Number(price),
@@ -31,10 +36,7 @@ function AdminInventoryForm() {
       color,
       brand,
       description,
-      image: imagePaths
-        .split(',')
-        .map((item) => item.trim())
-        .filter((item) => item !== ''),
+      image: parsedImages,
       inventory: Number(inventory),
       sku,
     };
@@ -63,7 +65,7 @@ function AdminInventoryForm() {
       setCondition('');
       setSize('');
       setColor('');
-        setBrand('');
+      setBrand('');
       setDescription('');
       setImagePaths('');
       setInventory('1');
@@ -146,14 +148,14 @@ function AdminInventoryForm() {
           />
         </Form.Group>
 
-            <Form.Group className="mb-3">
-            <Form.Label>Brand</Form.Label>
-            <Form.Control
-                type="text"
-                placeholder="Brand name"
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
-            />
+        <Form.Group className="mb-3">
+          <Form.Label>Brand</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Brand name"
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
+          />
         </Form.Group>
 
         <Form.Group className="mb-3">
@@ -172,7 +174,10 @@ function AdminInventoryForm() {
             type="text"
             placeholder="/images/item1.jpg, /images/item2.jpg"
             value={imagePaths}
-            onChange={(e) => setImagePaths(e.target.value)}
+            onChange={(e) => {
+              console.log('Image input changed:', e.target.value);
+              setImagePaths(e.target.value);
+            }}
           />
         </Form.Group>
 

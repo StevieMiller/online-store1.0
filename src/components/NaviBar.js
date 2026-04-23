@@ -1,30 +1,13 @@
-// Import navigation UI components from React Bootstrap
 import { Navbar, Nav, Form, Button } from 'react-bootstrap';
-
-// Import Link to enable client-side routing (no full page reload)
 import { Link } from 'react-router-dom';
 
-// NavigationBar receives:
-// - setSelectedCategory: function to update which products are shown
-// - totalCartItems: number used to display cart item count
-// - selectedColor: string representing the currently selected color
-// - setSelectedColor: function to update the selected color
-// - selectedMaxPrice: string representing the currently selected maximum price
-// - setSelectedMaxPrice: function to update the selected maximum price
-// - selectedSize: string representing the currently selected size
-// - setSelectedSize: function to update the selected size
-// - selectedCondition: string representing the currently selected condition
-// - setSelectedCondition: function to update the selected condition
-function NavigationBar({ setSelectedCategory, totalCartItems, selectedColor, setSelectedColor, selectedMaxPrice, setSelectedMaxPrice, selectedSize, setSelectedSize, selectedCondition, setSelectedCondition }) {
-  
-  const clearFilters = () => {
-    setSelectedCategory('all');
-    setSelectedColor('all');
-    setSelectedMaxPrice('all');
-    setSelectedSize('all');
-    setSelectedCondition('all');
-  };
-  
+function NavigationBar({
+  setSelectedCategory,
+  selectedCategory,
+  totalCartItems,
+  filters,
+  setFilters,
+}) {
   const categories = [
     { name: 'All Products', value: 'all' },
     { name: 'Tops', value: 'tops' },
@@ -33,136 +16,166 @@ function NavigationBar({ setSelectedCategory, totalCartItems, selectedColor, set
     { name: 'Outerwear', value: 'outerwear' },
     { name: 'Shoes', value: 'shoes' },
     { name: 'Accessories', value: 'accessories' },
-    { name: 'Home Goods', value: 'homegoods' }
+    { name: 'Home Goods', value: 'homegoods' },
   ];
 
-  return (
+  const filterConfigs = [
+    {
+      key: 'condition',
+      options: [
+        { label: 'All Conditions', value: 'all' },
+        { label: 'New', value: 'new' },
+        { label: 'Used', value: 'used' },
+      ],
+    },
+    {
+      key: 'size',
+      options: [
+        { label: 'All Sizes', value: 'all' },
+        { label: 'Small', value: 'small' },
+        { label: 'Medium', value: 'medium' },
+        { label: 'Large', value: 'large' },
+        { label: 'X-Large', value: 'x-large' },
+        { label: 'XX-Large', value: 'xx-large' },
+        { label: '0', value: '0' },
+        { label: '2', value: '2' },
+        { label: '4', value: '4' },
+        { label: '6', value: '6' },
+        { label: '8', value: '8' },
+        { label: '10', value: '10' },
+        { label: '12', value: '12' },
+        { label: '14', value: '14' },
+        { label: '16', value: '16' },
+        { label: '18', value: '18' },
+        { label: '20', value: '20' },
+        { label: '22', value: '22' },
+      ],
+    },
+    {
+      key: 'color',
+      options: [
+        { label: 'All Colors', value: 'all' },
+        { label: 'Black', value: 'black' },
+        { label: 'Blue', value: 'blue' },
+        { label: 'Brown', value: 'brown' },
+        { label: 'Gold', value: 'gold' },
+        { label: 'Multi', value: 'multi' },
+        { label: 'Green', value: 'green' },
+        { label: 'Orange', value: 'orange' },
+        { label: 'Pink', value: 'pink' },
+        { label: 'Purple', value: 'purple' },
+        { label: 'Red', value: 'red' },
+        { label: 'White', value: 'white' },
+      ],
+    },
+    {
+      key: 'maxPrice',
+      options: [
+        { label: 'All Prices', value: 'all' },
+        { label: 'Under $5', value: '5' },
+        { label: 'Under $10', value: '10' },
+        { label: 'Under $20', value: '20' },
+        { label: 'Under $30', value: '30' },
+        { label: 'Under $40', value: '40' },
+        { label: 'Under $50', value: '50' },
+      ],
+    },
+  ];
 
-    // Navbar wrapper (expand="lg" means it collapses into a menu on smaller screens)
-    <Navbar expand="lg">
-      
+  const handleFilterChange = (key, value) => {
+    setFilters?.((prev) => ({
+      ...(prev || {}),
+      [key]: value,
+    }));
+  };
 
-        {/* Brand/logo section — clicking it routes to home page */}
-        <Navbar.Brand as={Link} to="/">
+  const clearFilters = () => {
+    setSelectedCategory('all');
+    setFilters?.({
+      condition: 'all',
+      size: 'all',
+      color: 'all',
+      maxPrice: 'all',
+    });
+  };
+
+return (
+  <Navbar className="px-3">
+    <div className="w-100 d-flex justify-content-between align-items-center">
+
+      {/* LEFT GROUP */}
+      <div className="d-flex align-items-center">
+        <Navbar.Brand as={Link} to="/" className="me-3 mb-0">
           <img
-            className='ps-1'
+            className="ps-1"
             src="/images/go-logo.png"
-            alt="Galactic Outpost Logo "
+            alt="Galactic Outpost Logo"
             height="60"
           />
         </Navbar.Brand>
 
-        {/* Left-side navigation links (category filters) */}
-        <Nav className="me-auto">
-  {categories.map((category) => (
-    <Nav.Link
-      key={category.value}
-      as={Link}
-      to="/"
-      onClick={() => setSelectedCategory(category.value)}
-    >
-      {category.name}
-    </Nav.Link>
-  ))}
-</Nav>
+        <Form.Select
+          className="me-2"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          style={{ width: '180px' }}
+        >
+          {categories.map((category) => (
+            <option key={category.value} value={category.value}>
+              {category.name}
+            </option>
+          ))}
+        </Form.Select>
+      </div>
 
-        <Button variant="outline-secondary" className='me-2' onClick={clearFilters}>
+      {/* RIGHT GROUP */}
+      <div className="d-flex align-items-center flex-wrap justify-content-end">
+
+        <Button
+          variant="outline-secondary"
+          className="me-2 mb-2"
+          onClick={clearFilters}
+        >
           Clear Filters
         </Button>
 
-        {/* Condition filter dropdown */}
-        <Form.Select className='me-2'
-  value={selectedCondition}
-  onChange={(e) => setSelectedCondition(e.target.value)}
-  style={{ maxWidth: '200px' }}
->
-  <option value="all">All Conditions</option>
-  <option value="new">New</option>
-  <option value="used">Used</option>
-</Form.Select>
+        {filterConfigs.map((filter) => (
+          <Form.Select
+            key={filter.key}
+            className="me-2 mb-2"
+            value={filters?.[filter.key] ?? 'all'}
+            onChange={(e) => handleFilterChange(filter.key, e.target.value)}
+            style={{ width: '180px' }}
+          >
+            {filter.options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </Form.Select>
+        ))}
 
-          {/* Size filter dropdown */}
-          <Form.Select className='me-2'
-  value={selectedSize}
-  onChange={(e) => setSelectedSize(e.target.value)}
-  style={{ maxWidth: '200px' }}
->
-  <option value="all">All Sizes</option>
-  <option value="small">Small</option>
-  <option value="medium">Medium</option>
-  <option value="large">Large</option>
-  <option value="x-large">X-Large</option>
-  <option value="xx-large">XX-Large</option>
-  <option value="0">0</option>
-  <option value="2">2</option>
-  <option value="4">4</option>
-  <option value="6">6</option>
-  <option value="8">8</option>
-  <option value="10">10</option>
-  <option value="12">12</option>
-  <option value="14">14</option>
-  <option value="16">16</option>
-  <option value="18">18</option>
-  <option value="20">20</option>
-  <option value="22">22</option>
-</Form.Select>
-
-        <Form.Select className='me-2'
-  value={selectedColor}
-  onChange={(e) => setSelectedColor(e.target.value)}
-  style={{ maxWidth: '200px' }}
->
-  <option value="all">All Colors</option>
-  <option value="black">Black</option>
-  <option value="blue">Blue</option>
-  <option value="brown">Brown</option>
-  <option value="gold">Gold</option>
-  <option value="multi">Multi</option>
-  <option value="green">Green</option>
-  <option value="orange">Orange</option>
-  <option value="pink">Pink</option>
-  <option value="purple">Purple</option>
-  <option value="red">Red</option>
-  <option value="white">White</option>
-</Form.Select>
-
-        <Form.Select className='me-2'
-  value={selectedMaxPrice}
-  onChange={(e) => setSelectedMaxPrice(e.target.value)}
-  style={{ maxWidth: '200px' }}
->
-  <option value="all">All Prices</option>
-  <option value="5">Under $5</option>
-  <option value="10">Under $10</option>
-  <option value="20">Under $20</option>
-  <option value="30">Under $30</option>
-  <option value="40">Under $40</option>
-  <option value="50">Under $50</option>
-</Form.Select>
-
-        {/* Right-side navigation (cart link) */}
         <Nav>
-
-          {/* Cart link routes to /cart page */}
-          <Nav.Link as={Link} to="/cart">
-
-            {/* Cart icon */}
+          <Nav.Link
+            as={Link}
+            to="/cart"
+            className="d-flex align-items-center"
+          >
             <img
               src="/images/cart.png"
               alt="Cart"
               height="30"
-              className='me-2'
+              className="me-2"
             />
-
-            {/* Display total number of items in cart */}
             ({totalCartItems})
           </Nav.Link>
         </Nav>
 
-      
-    </Navbar>
-  );
+      </div>
+
+    </div>
+  </Navbar>
+);
 }
 
-// Export so it can be used in App.js
 export default NavigationBar;
