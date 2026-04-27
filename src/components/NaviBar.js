@@ -1,4 +1,4 @@
-import { Navbar, Nav, Form, Button } from 'react-bootstrap';
+import { Container, Navbar, Nav, NavDropdown, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 function NavigationBar({
@@ -100,11 +100,9 @@ function NavigationBar({
   };
 
 return (
-  <Navbar className="px-3">
-    <div className="w-100 d-flex justify-content-between align-items-center">
-
+  <Navbar bg="light">
+<Container>
       {/* LEFT GROUP */}
-      <div className="d-flex align-items-center">
         <Navbar.Brand as={Link} to="/" className="me-3 mb-0">
           <img
             className="ps-1"
@@ -114,19 +112,21 @@ return (
           />
         </Navbar.Brand>
 
-        <Form.Select
-          className="me-2"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          style={{ width: '180px' }}
-        >
-          {categories.map((category) => (
-            <option key={category.value} value={category.value}>
-              {category.name}
-            </option>
-          ))}
-        </Form.Select>
-      </div>
+        <Nav className="me-auto">
+          <NavDropdown title="Products" id="basic-nav-dropdown">
+  {categories.map((category) => (
+    <NavDropdown.Item
+      key={category.value}
+      onClick={() => setSelectedCategory(category.value)}
+      active={selectedCategory === category.value}
+    >
+      {category.name}
+    </NavDropdown.Item>
+  ))}
+</NavDropdown>
+        </Nav>
+
+     
 
       {/* RIGHT GROUP */}
       <div className="d-flex align-items-center flex-wrap justify-content-end">
@@ -173,7 +173,7 @@ return (
 
       </div>
 
-    </div>
+    </Container>
   </Navbar>
 );
 }
